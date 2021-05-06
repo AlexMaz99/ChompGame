@@ -7,7 +7,7 @@
 Project showcasing usage of jinterface - library made for connecting erlang application with java. Rules of the game can be found [here](https://en.wikipedia.org/wiki/Chomp).
 
 ## [Chomp Api](./chompApi/src)
-Erlang gen_server application
+Erlang gen_server application.
 
 ### Run server
 ```
