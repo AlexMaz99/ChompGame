@@ -21,9 +21,11 @@ public class Game {
 
     public void readReply(OtpErlangObject reply) {
         var replyTuple = (OtpErlangTuple) reply;
+
         readEatenChocolates(replyTuple.elementAt(1));
         readTurn(replyTuple.elementAt(2));
         readIfGameHasEnded(replyTuple.elementAt(3));
+
         if (hasEnded.get())
             setWhoWinInformation(replyTuple.elementAt(2));
     }
@@ -56,9 +58,9 @@ public class Game {
         this.hasEnded.set(hasEnded.booleanValue());
     }
 
-    private void setWhoWinInformation(OtpErlangObject otpErlangObject){
+    private void setWhoWinInformation(OtpErlangObject otpErlangObject) {
         var firstPlayerTurn = (OtpErlangAtom) otpErlangObject;
-        this.information.set(firstPlayerTurn.booleanValue() ? "Second player won": "First player won");
+        this.information.set(firstPlayerTurn.booleanValue() ? "Second player won" : "First player won");
     }
 
     public List<Position> getEatenChocolates() {

@@ -26,10 +26,9 @@ public class ErlangApiService {
     }
 
     public OtpErlangObject sendMove(Position position) throws IOException, OtpAuthException, OtpErlangExit {
-        OtpErlangObject[] positionObject = {new OtpErlangInt(position.x()), new OtpErlangInt(position.y())};
+        var positionObject = new OtpErlangInt[]{new OtpErlangInt(position.x()), new OtpErlangInt(position.y())};
         var tuple = new OtpErlangTuple(positionObject);
-        var positionList = new OtpErlangList(tuple);
-        connection.sendRPC(genServer, "takeTurn", positionList);
+        connection.sendRPC(genServer, "takeTurn", new OtpErlangList(tuple));
         return connection.receiveRPC();
     }
 }
