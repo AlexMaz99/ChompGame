@@ -20,6 +20,7 @@
   isGameEnded/1,
   eatChocolates/2,
   eatChocolateFrom/2,
+  isPoisonedChocolate/1,
   takeTurn/2,
   getEatenChocolates/1,
   isFirstPlayerTurn/1
@@ -36,8 +37,10 @@ isFreePosition(Position, Game) ->
 isProperPosition({X, Y}) ->
   (X > -1) and (X < 5) and (Y > -1) and (Y < 4).
 
+isPoisonedChocolate({X, Y}) -> (X == 0) and (Y == 0).
+
 canEatChocolate(Position, Game) ->
-  isProperPosition(Position) and isFreePosition(Position, Game).
+  isProperPosition(Position) and isFreePosition(Position, Game) and not isPoisonedChocolate(Position).
 
 countElements(List) -> countElements(0, List).
 countElements(Acc, []) -> Acc;
@@ -60,7 +63,7 @@ eatChocolateFrom({X, Y}, Game) ->
 
 takeTurn(Position, Game) ->
   case canEatChocolate(Position, Game) of
-    false -> {error, "Given chocolate has been already eaten"};
+    false -> Game;
     true ->
       NewGame = eatChocolateFrom(Position, Game),
       GameHasEnded = isGameEnded(NewGame),

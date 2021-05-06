@@ -14,16 +14,9 @@
 -export([start_link/0, init/1, terminate/2, handle_call/3, handle_info/2]).
 -export([
   close/0,
-  isFreePosition/1,
-  isProperPosition/1,
-  canEatChocolate/1,
-  countElements/1,
-  isGameEnded/0,
-  eatChocolates/1,
-  eatChocolateFrom/1,
-  takeTurn/1,
-  getEatenChocolates/0,
-  isFirstPlayerTurn/0
+  getGame/0,
+  newGame/0,
+  takeTurn/1
 ]).
 
 %% START %%
@@ -32,38 +25,22 @@ init(_) -> {ok, chompApi:createGame()}.
 
 %% INTERFACE CLIENT -> SERVER %%
 close() -> gen_server:call(?MODULE, terminate).
-isFreePosition(Position) -> gen_server:call(?MODULE, {isFreePosition, Position}).
-isProperPosition(Position) -> gen_server:call(?MODULE, {isProperPosition, Position}).
-canEatChocolate(Position) -> gen_server:call(?MODULE, {canEatChocolate, Position}).
-countElements(List) -> gen_server:call(?MODULE, {countElements, List}).
-isGameEnded() -> gen_server:call(?MODULE, {isGameEnded}).
-eatChocolates(List) -> gen_server:call(?MODULE, {eatChocolates, List}).
-eatChocolateFrom(Position) -> gen_server:call(?MODULE, {eatChocolateFrom, Position}).
+getGame() -> gen_server:call(?MODULE, {get}).
+newGame() -> gen_server:call(?MODULE, {new}).
 takeTurn(Position) -> gen_server:call(?MODULE, {takeTurn, Position}).
-getEatenChocolates() -> gen_server:call(?MODULE, {getEatenChocolates}).
-isFirstPlayerTurn() -> gen_server:call(?MODULE, {isFirstPlayerTurn}).
 
 %% HANDLE MESSAGES %%
-handle_call({isFreePosition, Position}, _From, Game) ->
-  {reply, chompApi:isFreePosition(Position, Game), Game};
-handle_call({isProperPosition, Position}, _From, Game) ->
-  {reply, chompApi:isProperPosition(Position), Game};
-handle_call({canEatChocolate, Position}, _From, Game) ->
-  {reply, chompApi:canEatChocolate(Position, Game), Game};
-handle_call({countElements, List}, _From, Game) ->
-  {reply, chompApi:countElements(List), Game};
-handle_call({isGameEnded}, _From, Game) ->
-  {reply, chompApi:isGameEnded(Game), Game};
-handle_call({eatChocolates, List}, _From, Game) ->
-  {reply, chompApi:eatChocolates(List, Game), Game};
-handle_call({eatChocolateFrom, Position}, _From, Game) ->
-  {reply, chompApi:eatChocolateFrom(Position, Game), Game};
+handle_call({get}, _From, Game) ->
+  {reply, Game, Game};
+
+handle_call({new}, _From, _) ->
+  Game = chompApi:createGame(),
+  {reply, Game, Game};
+
 handle_call({takeTurn, Position}, _From, Game) ->
-  {reply, chompApi:takeTurn(Position, Game), Game};
-handle_call({getEatenChocolates}, _From, Game) ->
-  {reply, chompApi:getEatenChocolates(Game), Game};
-handle_call({isFirstPlayerTurn}, _From, Game) ->
-  {reply, chompApi:isFirstPlayerTurn(Game), Game}.
+  NewGame = chompApi:takeTurn(Position, Game),
+  {reply, NewGame, NewGame}.
+
 handle_info(_, Game) -> {noreply, Game}.
 
 terminate(normal, _) -> io:format("Normal terminate~n"), ok;

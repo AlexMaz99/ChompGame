@@ -1,21 +1,9 @@
 package utils;
 
-public record Position(double x, double y) {
+public record Position(int x, int y) {
 
     public String toString() {
         return "(" + this.x + "," + this.y + ")";
-    }
-
-    public Position add(Position other) {
-        return new Position(this.x + other.x, this.y + other.y);
-    }
-
-    public Position subtract(Position other) {
-        return new Position(this.x - other.x, this.y - other.y);
-    }
-
-    public Position product(Position other) {
-        return new Position(this.x * other.x, this.y * other.y);
     }
 
     public boolean equals(Object other) {
